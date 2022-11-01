@@ -4,12 +4,12 @@
 Sporadically, the Sun launches solar eruptions such as flares and coronal
 mass ejections (CMEs). CMEs carry away a huge amount of mass and
 magnetic flux with them. An Earth-directed CME can cause serious
-consequences to the human system. It can destroy power grids/
-pipelines, satellites, and communications. Therefore, accurately
+consequences to the human system. It can destroy power grids/pipelines,
+satellites, and communications. Therefore, accurately
 monitoring and predicting CMEs is important to minimize damages to
 the human system. In this study we propose an ensemble learning
 approach, named CMETNet, for predicting the arrival time of CMEs from
-the Sun to the Earth.We collect and integrate eruptive events from two solar
+the Sun to the Earth. We collect and integrate eruptive events from two solar
 cycles, #23 and #24, from 1996 to 2021 with a total of 363 geoeffective
 CMEs. The data used for making predictions include CME features, solar
 wind parameters and CME images obtained from the SOHO/LASCO
