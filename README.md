@@ -1,5 +1,5 @@
 # Predicting CME Arrival Time through Data Integration and Ensemble Learning
-Khalid A. Alobaid, Yasser Abduallah, Jason T. L. Wang, Haimin Wang
+Khalid A. Alobaid, Yasser Abduallah, Jason T. L. Wang, Haimin Wang <br>
 The Sun constantly releases radiation and plasma into the heliosphere.
 Sporadically, the Sun launches solar eruptions such as flares and coronal
 mass ejections (CMEs). CMEs carry away a huge amount of mass and
