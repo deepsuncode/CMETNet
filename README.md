@@ -19,3 +19,6 @@ neural network for image processing. Experimental results show that
 CMETNet performs better than existing machine learning methods
 reported in the literature, with a Pearson product-moment correlation
 coefficient of 0.83 and a mean absolute error of 9.75 h.</p>
+<p>References:</p>
+Predicting CME Arrival Time through Data Integration and Ensemble Learning, Frontiers in Astronomy and Space Sciences, 2022</p>
+<p>https://www.frontiersin.org/articles/10.3389/fspas.2022.1013345/full</p>
