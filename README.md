@@ -1,6 +1,6 @@
 # Predicting CME Arrival Time through Data Integration and Ensemble Learning
-Khalid A. Alobaid, Yasser Abduallah, Jason T. L. Wang, Haimin Wang <br>
-The Sun constantly releases radiation and plasma into the heliosphere.
+<p>Khalid A. Alobaid, Yasser Abduallah, Jason T. L. Wang, Haimin Wang </p>
+<p>The Sun constantly releases radiation and plasma into the heliosphere.
 Sporadically, the Sun launches solar eruptions such as flares and coronal
 mass ejections (CMEs). CMEs carry away a huge amount of mass and
 magnetic flux with them. An Earth-directed CME can cause serious
@@ -18,4 +18,4 @@ regression algorithms for numerical data analysis and a convolutional
 neural network for image processing. Experimental results show that
 CMETNet performs better than existing machine learning methods
 reported in the literature, with a Pearson product-moment correlation
-coefficient of 0.83 and a mean absolute error of 9.75 h.
+coefficient of 0.83 and a mean absolute error of 9.75 h.</p>
