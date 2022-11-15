@@ -40,7 +40,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from CMETNet_CNN_model import CNN_Model
 
 
-CME_FITS_list_filename = '../data/ICMEs_C2_fits_list.csv'
+CME_FITS_list_filename = '/data/ICMEs_C2_fits_list.csv'
 CME_FITS_list = pd.read_csv(CME_FITS_list_filename)
 
 work_path = '/'
