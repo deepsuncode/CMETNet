@@ -15,9 +15,9 @@
  express or implied warranty.
 '''
 
-from __future__ import print_function
+
 import warnings
-warnings.filterwarnings("ignore")
+warnings.filterwarnings('ignore', category=UserWarning, append=True)
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -40,10 +40,10 @@ from tensorflow.keras.callbacks import EarlyStopping
 from CMETNet_CNN_model import CNN_Model
 
 
-CME_FITS_list_filename = '/data/ICMEs_C2_fits_list.csv'
+CME_FITS_list_filename = './data/ICMEs_C2_fits_list.csv'
 CME_FITS_list = pd.read_csv(CME_FITS_list_filename)
 
-work_path = '/'
+work_path = './'
 
 CME_images = []
 CME_images_labels = []
@@ -53,14 +53,14 @@ CME_images_labels_test = []
 Event_num_test = []
 
 for row in range(0,len(CME_FITS_list)):  
-    if (CME_FITS_list.Filepath[row][29:33]=='2014'):
+    if (CME_FITS_list.Filepath[row][29:33]=='2013'):
         CME_TT=CME_FITS_list.transit_time[row]
         CME_FITS_path=work_path + CME_FITS_list.Filepath[row]
         image_file = get_pkg_data_filename(CME_FITS_path)
         hdu_list = fits.open(image_file)
 
         try:
-            hdu_list[0].verify('fix')
+            hdu_list[0].verify('fix+ignore')
 
         except:
             hdu_list[0].header[77]='BLANK'
@@ -71,8 +71,8 @@ for row in range(0,len(CME_FITS_list)):
                 hdu_list[0].header[80]='BLANK'
             except:
                 pass
-            print(hdu_list[0].header)
-            hdu_list[0].verify('fix')
+
+            hdu_list[0].verify('fix+ignore')
 
 
         image_data = hdu_list[0].data
@@ -81,14 +81,14 @@ for row in range(0,len(CME_FITS_list)):
         Event_num_train.append(int(CME_FITS_list.Filepath[row][25:28]))
         
 for row in range(0,len(CME_FITS_list)):  
-    if (CME_FITS_list.Filepath[row][29:33]=='2013'):
+    if (CME_FITS_list.Filepath[row][29:33]=='2014'):
         CME_TT=CME_FITS_list.transit_time[row]
         CME_FITS_path=work_path + CME_FITS_list.Filepath[row]
         image_file = get_pkg_data_filename(CME_FITS_path)
         hdu_list = fits.open(image_file)
 
         try:
-            hdu_list[0].verify('fix')
+            hdu_list[0].verify('fix+ignore')
 
         except:
             hdu_list[0].header[77]='BLANK'
@@ -99,8 +99,8 @@ for row in range(0,len(CME_FITS_list)):
                 hdu_list[0].header[80]='BLANK'
             except:
                 pass
-            print(hdu_list[0].header)
-            hdu_list[0].verify('fix')
+
+            hdu_list[0].verify('fix+ignore')
 
 
         image_data = hdu_list[0].data
@@ -135,7 +135,7 @@ CME_images_rescaled_test = np.array(CME_images_rescaled_test)
 image_shape = (256, 256, 1)
 model = CNN_Model(image_shape).cnn_model()
 model.summary()
-epoch_steps = 100
+epoch_steps = 10
 
 
 training_data = CME_images_rescaled[:]
@@ -157,7 +157,6 @@ history = model.fit(x=X_train, y=y_train, validation_data=(X_val, y_val), verbos
 pred = model.predict(X_test)
 MAE_temp = round(mean_absolute_error(y_test, pred),2)
 
-print("Mean absolute error:\t",MAE_temp)
 
 
 temp_result = pd.DataFrame(pred,columns=['results'])
@@ -175,9 +174,11 @@ events_with_no_images['results']=0
 final_CNN_results = pred_results.append(events_with_no_images).sort_values(by=['event_number'])
 
 #safe to csv
-temp_path = '/results/'
-filename1 = 'CMETNet_CNN_2013'
+temp_path = './results/'
+filename1 = 'CMETNet_CNN_2014'
 final_CNN_results.to_csv(temp_path+filename1, encoding='utf-8', index=False)
+
+print("Done ------------------------------------ ")
 
 
 

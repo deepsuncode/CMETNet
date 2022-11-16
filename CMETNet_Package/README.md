@@ -36,6 +36,7 @@ For the latest updates of the tool refer to https://github.com/deepsuncode/CMETN
 | tensorflow-gpu| 2.4.1 | GPU utlization for Deep learning algorithms |
 | xgboost| 1.5.0 | Gradient boosted trees algorithm |
 | astropy| 4.0.2 | Framework for commonly-used astronomy tools |
+| matplotlib| 3.6.2 | Visutalization tool |
 
 In order to use the code to run some predictions, you should use the exact version of Python and its packages stated above. 
 Other versions are not tested, but they should work if you have the environment set properly to run deep learning jobs.
@@ -68,6 +69,7 @@ After downloading the zip files from github repository: https://github.com/deeps
 |  CMETNet_CNN_train.py | Python program to train/predict the CMETNet CNN model| 
 |  CMETNet_COMB_train.py  | Python program to train/predict CMETNet COMB models| 
 |  results_ensemble.py | Python program to ensemble the 5 models and produce CMETNet results| 
+|  pretrained_models_results.py | Python program to print pretrained results| 
  
  
  
@@ -80,12 +82,12 @@ and
 
 	python CMETNet_COMB_train.py
 	
-Without any option will this will train all the models using data samples, and save the prediction results in the results folder.
+Without any option will this will train all the models using data samples.
 
 ## Running a Testing Task:
 To show the results of CMETNet, you should type:
 
 	python results_ensemble.py
 	
-This will ensemble the results made by the models and show the PCCMM/MAE, save the CMETNet results in the results folder.
+This will ensemble the results made by the models and show the results and the PCCMM/MAE metrics, save the CMETNet results in the results folder.
 

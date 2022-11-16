@@ -35,12 +35,12 @@ def str_to_datatime(row):
     x = datetime.datetime.strptime(row,'%Y-%m-%d %H:%M:%S')
     return x
 
-filename = '/data/ICME_list.csv'
+filename = './data/ICME_list.csv'
 org_data = pd.read_csv(filename)
 org_data["disturbance"] = [str_to_datatime(x) for x in org_data["disturbance"]]
 
 
-year=2013
+year=2014
 year_next = str(year+1)
 year = str(year)
 test_indices = org_data.index[(org_data['disturbance']>=datetime.datetime.fromisoformat(year+'-01-01 00:00:00'))&
@@ -55,6 +55,7 @@ X_data.drop("transit_time", axis=1,inplace=True)
 y_data = all_data['transit_time']
 data_shape=X_data.shape[1]
 hold_out_data = org_data.iloc[test_indices, :]
+events_disturbance = hold_out_data["disturbance"].reset_index(drop=True)
 hold_out_data.drop("disturbance", axis=1,inplace=True)
 hold_out_X_test = hold_out_data[:]
 hold_out_X_test.drop("transit_time", axis=1,inplace=True)
@@ -65,12 +66,12 @@ hold_out_y_test_reseted = hold_out_y_test.reset_index(drop=True)
 RF_model = RandomForestRegressor(n_estimators= 800, max_features= 'sqrt')
 SVR_model = SVR(kernel ='rbf', cache_size =200)
 XGBoost_model = XGBRegressor()
-kernel = RBF() + WhiteKernel(noise_level=0.2) 
+kernel = 1.0 * RBF() + WhiteKernel(noise_level=0.2) 
 GPR_model = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=30)
 
 
 start_time = datetime.datetime.now()
-training_times = 100
+training_times = 10
 
 MAE_temp = 100
 MAE_XGBoost_temp = 100
@@ -79,7 +80,6 @@ MAE_RF_temp = 100
 MAE_GPR_temp = 100
 
 
-print('Start: ------------------------------------',start_time.strftime("%Y/%m/%d %H:%M:%S"))
 
 report_each =1
 
@@ -87,7 +87,7 @@ report_each =1
 for i in range(1,training_times+1):
     current_time = datetime.datetime.now()
     if i % report_each == 0:
-        print("Epoch ",str(i).zfill(2),"/"+str(training_times)+" \t\t",current_time.strftime("%H:%M:%S"))
+        print("Epoch ",str(i).zfill(2),"/"+str(training_times))
 
 
     RF_X_train, RF_X_test, RF_y_train, RF_y_test = train_test_split(X_data, y_data, train_size=200)
@@ -134,7 +134,8 @@ for i in range(1,training_times+1):
 
 
     median_AT = []
-    All_AT = []
+    ALL_TT = []
+
     
 
     for x in range(0,len(hold_out_y_test)):
@@ -144,6 +145,8 @@ for i in range(1,training_times+1):
         x4=best_GPR[x]
         All_results = [x1,x2,x3,x4]
         median_AT.append(median(All_results))
+        ALL_TT.append(All_results)
+
         
 
 
@@ -151,7 +154,7 @@ for i in range(1,training_times+1):
 
     if MAE_current<MAE_temp:
         MAE_temp=MAE_current  
-        All_AT.append(All_results)
+        best_ALL_TT = ALL_TT
 
     del RF_regr
     del SVR_regr
@@ -159,14 +162,15 @@ for i in range(1,training_times+1):
     del GPR_regr
 
 
-path = '/results/'   
+path = './results/'   
 
 #safe results to csv
-np.savetxt(path+"Ensemble_model_"+year+"_COMB.csv", All_AT, delimiter=",")
+np.savetxt(path+"Ensemble_model_"+year+"_COMB.csv", best_ALL_TT, delimiter=",")
 np.savetxt(path+"Ensemble_model_"+year+"_y_test.csv", hold_out_y_test, delimiter=",")
+events_disturbance.to_csv(path+"Ensemble_model_"+year+"_events_disturbance.csv", encoding='utf-8', index=False)
 
 current_time = datetime.datetime.now()    
-print("Done ------------------------------------ ",current_time.strftime("%Y/%m/%d %H:%M:%S"))
+print("Done ------------------------------------ ")
 
 
 

@@ -15,15 +15,19 @@
 '''
 
 import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
+import os
 from sklearn.metrics import mean_absolute_error
 
-year=2013
+year=2014
 temp_x=0
-path = '/results/'
+path = './results/'
 
-filename = path+'Ensemble_model_'+str(year)+'_All.csv'
+
+
+filename = path+'Ensemble_model_'+str(year)+'_COMB.csv'
 All_result = pd.read_csv(filename, header = None)
 
 filename = path+'Ensemble_model_'+str(year)+'_y_test.csv'
@@ -32,6 +36,8 @@ y_test = pd.read_csv(filename, header = None)
 filename = path+'CMETNet_CNN_'+str(year)
 CNN_result = pd.read_csv(filename)
 
+filename = path+'Ensemble_model_'+str(year)+'_events_disturbance.csv'
+events_disturbance = pd.read_csv(filename)
 
 combined_results = pd.DataFrame(index=range(0,len(All_result)),columns = ["all_4_models","CNN",'True TT'])
 for row in range(0,len(combined_results)):
@@ -133,13 +139,48 @@ for x in range(0,len(combined_results)):
       
 pred = list(combined_results['Predicated TT'])
 true = list(combined_results['True TT'])
+
+
+events_disturbance["CME Arrival Time"] = combined_results[["True TT"]]
+events_disturbance['CMETNet Prediction'] = combined_results[["Predicated TT"]]
+events_disturbance['Difference'] = 0
+events_disturbance = events_disturbance.rename(columns={"disturbance": "CME Appearance Time"})
+events_disturbance['CME Appearance Time'] = pd.to_datetime(events_disturbance['CME Appearance Time'], format='%Y-%m-%d %H:%M:%S')
+
+for index, row in events_disturbance.iterrows():
+    temp_TT_1 = row["CME Arrival Time"]
+    temp_TT_2 = row["CMETNet Prediction"]
+    temp_AT_1 = row["CME Appearance Time"] + datetime.timedelta(hours=temp_TT_1)
+    temp_AT_2 = row["CME Appearance Time"] + datetime.timedelta(hours=temp_TT_2)
+    
+    events_disturbance.at[index,'CME Arrival Time']=temp_AT_1
+    events_disturbance.at[index,'CMETNet Prediction']=temp_AT_2
+    events_disturbance.at[index,'Difference']=temp_TT_1-temp_TT_2     
+
+header=[['Observed Data','Observed Data','Prediction','Prediction'],
+        ['CME Appearance Time','CME Arrival Time','CMETNet','Difference in Hours']]
+ 
+events_disturbance.columns=header
+
+
+print("\n",events_disturbance.to_string(index=False),"\n")
 print('CMENet PPMCC:\t',round(np.corrcoef(pred, true)[0,1],2))
 print('CMENet MAE:\t',round(mean_absolute_error(true, pred),2))
 
+
+if os.path.exists(path+'Ensemble_model_'+str(year)+'_COMB.csv'):
+  os.remove(path+'Ensemble_model_'+str(year)+'_COMB.csv')
+  os.remove(path+'Ensemble_model_'+str(year)+'_y_test.csv')
+  os.remove(path+'CMETNet_CNN_'+str(year))
+  os.remove(path+'Ensemble_model_'+str(year)+'_events_disturbance.csv')
+
+
 #safe to csv
-temp_path = '/results/'
-filename1 = 'CMETNet_results_2013'
-combined_results[["True TT","Predicated TT"]].to_csv(temp_path+filename1, encoding='utf-8', index=False)
+temp_path = './results/'
+filename1 = 'CMETNet_results_'+str(year)
+events_disturbance.to_csv(temp_path+filename1, encoding='utf-8', index=False)
+
+print("Done ------------------------------------ ")
 
 
 
