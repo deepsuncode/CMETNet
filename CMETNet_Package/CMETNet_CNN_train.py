@@ -171,7 +171,7 @@ b = np.arange(temp_min, temp_max+1, 1)
 zero_events = np.setxor1d(a,b)
 events_with_no_images = pd.DataFrame(zero_events,columns=['event_number'])
 events_with_no_images['results']=0
-final_CNN_results = pred_results.append(events_with_no_images).sort_values(by=['event_number'])
+final_CNN_results = pd.concat([pred_results, events_with_no_images]).sort_values(by=['event_number'])
 
 #safe to csv
 temp_path = './results/'
@@ -179,7 +179,3 @@ filename1 = 'CMETNet_CNN_2014'
 final_CNN_results.to_csv(temp_path+filename1, encoding='utf-8', index=False)
 
 print("Done ------------------------------------ ")
-
-
-
-
