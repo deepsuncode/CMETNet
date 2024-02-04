@@ -33,7 +33,7 @@ All_result = pd.read_csv(filename, header = None)
 filename = path+'Ensemble_model_'+str(year)+'_y_test.csv'
 y_test = pd.read_csv(filename, header = None)
 
-filename = path+'CMETNet_CNN_'+str(year)
+filename = path+'CMETNet_CNN_'+str(year)+'.csv'
 CNN_result = pd.read_csv(filename)
 
 filename = path+'Ensemble_model_'+str(year)+'_events_disturbance.csv'
